@@ -15,7 +15,12 @@ void iniciarT() {
       
 }
  int main(){
+    int linha, coluna;
+    char nome[50], escolha[265];
 
+    printf("Bem-vindo, Novo Jogador!\n");
+    printf("Digite seu nome para sua identificação: ");
+    scanf("%s", nome);
 
 
 
