@@ -17,6 +17,8 @@ void iniciarT() {
     }
       
 }
+
+
 void mostrarT() {
     printf("\n");
     for (int i = 0; i < 3; i++) {
@@ -29,6 +31,9 @@ void mostrarT() {
     }
     printf("\n");
 }
+
+
+
 int jogada(int linha, int coluna) {
     if (linha < 1 || linha > 3 || coluna < 1 || coluna > 3 || tabuleiro[linha - 1][coluna - 1] != ' ') {
         return 0; //-->inválida
@@ -36,6 +41,9 @@ int jogada(int linha, int coluna) {
     tabuleiro[linha - 1][coluna - 1] = jogador1;
     return 1; //-->válida
 }
+
+
+
 int victory() {
     //linha e coluna
     for (int i = 0; i < 3; i++) {
@@ -51,9 +59,16 @@ int victory() {
         return 1;
     return 0;
 }
+
+
+
 void alternar() {
     jogador1 = (jogador1 == 'X') ? 'O' : 'X';
 }
+
+
+
+
 //main
  int main(){
     int linha, coluna;
@@ -76,6 +91,20 @@ void alternar() {
                 mostrarT();
                 printf("Jogador %c, faça sua jogada (linha e coluna): ", jogador1);
                 scanf("%d %d", &linha, &coluna);
+
+
+                if (victory()) {
+                    mostrarT();
+                    printf("Parabéns, %s! Jogador %c venceu!\n", nome, jogador1);
+                    break;
+                }
+                if (!jogada(linha, coluna)) {
+                    printf("Jogada inválida. Tente novamente.\n");
+                    continue;
+                }
+
+               
+                alternar();
             }
 
         } else if (strcmp(escolha, "rank") == 0) {
