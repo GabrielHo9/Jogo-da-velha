@@ -31,13 +31,29 @@ void mostrarT() {
 }
 int jogada(int linha, int coluna) {
     if (linha < 1 || linha > 3 || coluna < 1 || coluna > 3 || tabuleiro[linha - 1][coluna - 1] != ' ') {
-        return 0; //inválida
+        return 0; //-->inválida
     }
     tabuleiro[linha - 1][coluna - 1] = jogador1;
-    return 1; //válida
+    return 1; //-->válida
 }
-
-
+int victory() {
+    //linha e coluna
+    for (int i = 0; i < 3; i++) {
+        if (tabuleiro[i][0] == jogador1 && tabuleiro[i][1] == jogador1 && tabuleiro[i][2] == jogador1)
+            return 1;
+        if (tabuleiro[0][i] == jogador1 && tabuleiro[1][i] == jogador1 && tabuleiro[2][i] == jogador1)
+            return 1;
+    }
+    //diagonais
+    if (tabuleiro[0][0] == jogador1 && tabuleiro[1][1] == jogador1 && tabuleiro[2][2] == jogador1)
+        return 1;
+    if (tabuleiro[0][2] == jogador1 && tabuleiro[1][1] == jogador1 && tabuleiro[2][0] == jogador1)
+        return 1;
+    return 0;
+}
+void alternar() {
+    jogador1 = (jogador1 == 'X') ? 'O' : 'X';
+}
 //main
  int main(){
     int linha, coluna;
