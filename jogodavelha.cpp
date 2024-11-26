@@ -66,7 +66,15 @@ void alternar() {
     jogador1 = (jogador1 == 'X') ? 'O' : 'X';
 }
 
-
+int empate() {
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            if (tabuleiro[i][j] == ' ')
+                return 0;//--tem espaco
+        }
+    }
+    return 1; // --n tem espaco logo: Empate
+}
 
 
 //main
@@ -102,7 +110,11 @@ void alternar() {
                     printf("Jogada inválida. Tente novamente.\n");
                     continue;
                 }
-
+                 if (empate()) {
+                    mostrarT();
+                    printf("O jogo empatou!\n");
+                    break;
+                }
                
                 alternar();
             }
