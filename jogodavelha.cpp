@@ -1,13 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
-//fazer um jogo da velha funcional com tela inicial,
+
+
+//fazer um jogo da velha funcional com tela inicial,(novo,creditos,ranking,sair).
 
 //variaveis
-char tabuleiro[3][3];
+char jogov[3][3];
 char jogador1 = 'X';
-
+int i,j,linha,coluna;
 //struct do ranking
 typedef struct Ranking
     {
@@ -17,28 +20,14 @@ typedef struct Ranking
     
 
     Rank ranking;
-//void do tabuleiro
+//void do jogov
 void iniciarT() {
-    for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < 3; j++) {
-            tabuleiro[i][j] = ' ';
+    for ( i = 0; i < 3; i++) {
+        for ( j = 0; j < 3; j++) {
+            jogov[i][j] = ' ';
         }
     }
       
-}
-
-//void de exibir o tabuleiro no terminal
-void mostrarT() {
-    printf("\n");
-    for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < 3; j++) {
-            printf(" %c ", tabuleiro[i][j]);
-            if (j < 2) printf("|");
-        }
-        printf("\n");
-        if (i < 2) printf("---+---+---\n");
-    }
-    printf("\n");
 }
 //void pra abrir o arquivo de ranking
 void arqranking() {
@@ -54,36 +43,79 @@ void arqranking() {
     fclose(arquivo);
 
     printf("Ranking salvo em 'ranking.txt'!\n");
+    fclose;
 }
 
-//if pra determinar tipo de jogada
-int jogada(int linha, int coluna) {
-    if (linha < 1 || linha > 3 || coluna < 1 || coluna > 3 || tabuleiro[linha - 1][coluna - 1] != ' ') {
-        return 0; //-->inválida
+//void de exibir o jogo no terminal
+void mostrarT() {
+    printf("\n");
+    for ( i = 0; i < 3; i++) {
+        for ( j = 0; j < 3; j++) {
+            printf(" %c ", jogov[i][j]);
+            if (j < 2) 
+            printf("|");
+        }
+        printf("\n");
+        if (i < 2) printf("-----------\n");
     }
-    tabuleiro[linha - 1][coluna - 1] = jogador1;
-    return 1; //-->válida
+    printf("\n");
 }
 
+//if pra determinar tipo de jogada(por algum motivo se eu tirar o int da linha e coluna a coluna vira void(???????))
+int jogada( int linha, int coluna) {
+    if (!isdigit(linha)||!isdigit(coluna)){
 
+        return 0;
+    }
+    else{
+    if (linha < 1 || linha > 3 || coluna < 1 || coluna > 3 || jogov[linha - 1][coluna - 1] != ' ')  {
+        return 0; //-->inválida
+        
+    }
+    }
+    jogov[linha - 1][coluna - 1] = jogador1;
+    return 1; //-->válida
+
+}
+
+int errodestring(int *linha, int *coluna) {
+    char entrada[100];
+    printf("Sua vez %c (linha e coluna): ", jogador1);
+
+    if (fgets(entrada, sizeof(entrada), stdin) != NULL) {
+       
+        if (sscanf(entrada, "%d %d", linha, coluna) == 2) {
+            return 1; //-->válida
+        }
+    }
+
+    printf("Entrada inválida. Por favor, insira dois números separados por espaço.\n");
+    return 0; //-->inválida
+}
 //condicao de vitoria
 int victory() {
-    //linhas e colunas
+   
+      //linhas e colunas
     for (int i = 0; i < 3; i++) {
-        if (tabuleiro[i][0] != ' ' && tabuleiro[i][0] == tabuleiro[i][1] && tabuleiro[i][1] == tabuleiro[i][2])
+        if (jogov[i][0] != ' ' && jogov[i][0] == jogov[i][1] && jogov[i][1] == jogov[i][2])
             return 1; 
-        if (tabuleiro[0][i] != ' ' && tabuleiro[0][i] == tabuleiro[1][i] && tabuleiro[1][i] == tabuleiro[2][i])
+        if (jogov[0][i] != ' ' && jogov[0][i] == jogov[1][i] && jogov[1][i] == jogov[2][i])
             return 1;  
     }
 
     //diagonais
-    if (tabuleiro[0][0] != ' ' && tabuleiro[0][0] == tabuleiro[1][1] && tabuleiro[1][1] == tabuleiro[2][2])
+    if (jogov[0][0] != ' ' && jogov[0][0] == jogov[1][1] && jogov[1][1] == jogov[2][2])
         return 1; 
-    if (tabuleiro[0][2] != ' ' && tabuleiro[0][2] == tabuleiro[1][1] && tabuleiro[1][1] == tabuleiro[2][0])
+    if (jogov[0][2] != ' ' && jogov[0][2] == jogov[1][1] && jogov[1][1] == jogov[2][0])
         return 1; 
 
-    return 0; 
-}
+           
+              
+                return 0;
+            }
+
+            
+
 
 
 
@@ -93,9 +125,9 @@ void alternar() {
 }
 
 int empate() {
-    for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < 3; j++) {
-            if (tabuleiro[i][j] == ' ')
+    for ( i = 0; i < 3; i++) {
+        for ( j = 0; j < 3; j++) {
+            if (jogov[i][j] == ' ')
                 return 0;//--tem espaco
         }
     }
@@ -107,7 +139,7 @@ int empate() {
 
 //main
  int main(){
-    int linha, coluna;
+    
     char escolha[265];
 
     //setando o ranking a 0
@@ -134,25 +166,31 @@ int empate() {
             while (1) {
                 mostrarT();
                 printf(" sua vez %c, (linha e coluna): ", jogador1);
-                scanf("%d %d", &linha, &coluna);
+                scanf(" %d %d ", &linha, &coluna);
+                if (!errodestring(&linha, &coluna)) {
+                continue; 
+                }
 
-                if (!jogada(linha, coluna)) {
-                    printf("jogada ta errada tente de novo.\n");
-                    continue;
+              
+                if (jogada(linha, coluna)) {
+                break; 
+                } else {
+                    printf("Jogada inválida. Posição já ocupada ou fora do tabuleiro.\n");
                     }
+
 
                 if (victory()) {
                      mostrarT();
                 if (jogador1 == 'X') {
-                        printf("congratulation, %s! Jogador %c venceu!\n",  ranking.j1);
+                        printf("congratulation, %s voce venceu!\n",  ranking.j1);
                         ranking.vitoriaj1++;
                 }else {
-                        printf("congratulation, %s! Jogador %c venceu!\n",  ranking.j2);
+                        printf("congratulation, %s voce venceu!\n",  ranking.j2);
                         ranking.vitoriaj2++;
                 }
                         break;
                 }
-
+                    
                     if (empate()) {
                     mostrarT();
                     printf("empate!\n");
@@ -169,7 +207,7 @@ int empate() {
             printf("Jogador 1: %s (Vitórias: %d)\n", ranking.j1, ranking.vitoriaj1);
             printf("Jogador 2: %s (Vitórias: %d)\n", ranking.j2, ranking.vitoriaj2);
             printf("Empates: %d\n", ranking.empates);
-    //mostrando os creditos
+            //mostrando os creditos
         } else if (strcmp(escolha, "cred") == 0) {
             printf("Exibindo os créditos...\n");
             printf("Desenvolvido por: Gabriel Pereira Ho\nPedro Henrique de Macedo Oliveira\nArthur Lobo Freitas\nJoão Vitor Amaral");
@@ -187,7 +225,7 @@ int empate() {
 
 
 return 0;
-}
+ }
  
   
 
