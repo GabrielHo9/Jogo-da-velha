@@ -180,6 +180,8 @@ int main(){
             printf("Parabéns, %s! Você venceu!\n", ranking.j2);
             ranking.vitoriaj2++;
         }
+         arqranking();
+                    break;
         break;
     }
 
