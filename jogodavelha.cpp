@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-
+#include <locale.h>
 
 
 //fazer um jogo da velha funcional com tela inicial,(novo,creditos,ranking,sair).
@@ -31,7 +31,8 @@ void iniciarT() {
 }
 //void pra abrir o arquivo de ranking
 void arqranking() {
-    FILE *arquivo = fopen("ranking.txt", "w");
+    FILE *arquivo = fopen("rank.txt", "w");
+    
     if (!arquivo) {
         printf("erro no arquivo\n");
         return;
@@ -42,7 +43,7 @@ void arqranking() {
     fprintf(arquivo, "Empates: %d\n", ranking.empates);
     fclose(arquivo);
 
-    printf("Ranking salvo em 'ranking.txt'!\n");
+    printf("Ranking salvo!\n");
     fclose;
 }
 
@@ -131,7 +132,7 @@ int empate() {
 
 //main
 int main(){
-    
+    setlocale(LC_ALL, "pt_BR.UTF-8");
     char escolha[265];
 
     //setando o ranking a 0
@@ -180,8 +181,8 @@ int main(){
             printf("Parabéns, %s! Você venceu!\n", ranking.j2);
             ranking.vitoriaj2++;
         }
-         arqranking();
-                    break;
+         arqranking(); // Salva o ranking ao final do jogo
+        
         break;
     }
 
@@ -222,4 +223,3 @@ return 0;
  }
  
   
-
