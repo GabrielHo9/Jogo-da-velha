@@ -62,36 +62,16 @@ void mostrarT() {
 }
 
 //if pra determinar tipo de jogada(por algum motivo se eu tirar o int da linha e coluna a coluna vira void(???????))
-int jogada( int linha, int coluna) {
-    if (!isdigit(linha)||!isdigit(coluna)){
-
-        return 0;
-    }
-    else{
-    if (linha < 1 || linha > 3 || coluna < 1 || coluna > 3 || jogov[linha - 1][coluna - 1] != ' ')  {
+int jogada(int linha, int coluna) {
+    if (linha < 1 || linha > 3 || coluna < 1 || coluna > 3 || jogov[linha - 1][coluna - 1] != ' ') {
         return 0; //-->inválida
-        
-    }
     }
     jogov[linha - 1][coluna - 1] = jogador1;
     return 1; //-->válida
 
 }
 
-int errodestring(int *linha, int *coluna) {
-    char entrada[100];
-    printf("Sua vez %c (linha e coluna): ", jogador1);
 
-    if (fgets(entrada, sizeof(entrada), stdin) != NULL) {
-       
-        if (sscanf(entrada, "%d %d", linha, coluna) == 2) {
-            return 1; //-->válida
-        }
-    }
-
-    printf("Entrada inválida. Por favor, insira dois números separados por espaço.\n");
-    return 0; //-->inválida
-}
 //condicao de vitoria
 int victory() {
    
@@ -109,15 +89,27 @@ int victory() {
     if (jogov[0][2] != ' ' && jogov[0][2] == jogov[1][1] && jogov[1][1] == jogov[2][0])
         return 1; 
 
-           
-              
+
                 return 0;
             }
 
             
 
 
+int errodestring(int *linha, int *coluna) {
+    char entrada[100];
+    printf("Sua vez %c (linha e coluna): ", jogador1);
 
+    if (fgets(entrada, sizeof(entrada), stdin) != NULL) {
+
+        if (sscanf(entrada, "%d %d", linha, coluna) == 2) {
+            return 1; //-->válida
+        }
+    }
+
+    printf("Entrada inválida. Por favor, insira dois números separados por espaço.\n");
+    return 0; //-->inválida
+}
 
 //void de alternar jogadores
 void alternar() {
@@ -138,7 +130,7 @@ int empate() {
 
 
 //main
- int main(){
+int main(){
     
     char escolha[265];
 
@@ -147,12 +139,14 @@ int empate() {
     ranking.vitoriaj2 = 0;
     ranking.empates = 0;
     //interface inicial
-    printf("Bem vindo, J1!\n");
     printf("Digite seu nome: ");
     scanf("%s", ranking.j1);
-    printf("Bem vindo, J2!\n");
+    printf("Bem vindo, %s!\n",ranking.j1);
+    
     printf("Digite seu nome: ");
     scanf("%s", ranking.j2);
+    printf("Bem vindo, %s\n",ranking.j2);
+    
 //loop da interface
  while (1) {
         printf("\nescolha como prosseguir: \n");
@@ -164,41 +158,39 @@ int empate() {
             iniciarT();
             
             while (1) {
-                mostrarT();
-                printf(" sua vez %c, (linha e coluna): ", jogador1);
-                scanf(" %d %d ", &linha, &coluna);
-                if (!errodestring(&linha, &coluna)) {
-                continue; 
-                }
+                 mostrarT();
 
-              
-                if (jogada(linha, coluna)) {
-                break; 
-                } else {
-                    printf("Jogada inválida. Posição já ocupada ou fora do tabuleiro.\n");
-                    }
+    // obter entrada válida do jogador
+    while (1) {
+        if (errodestring(&linha, &coluna)) {
+            if (jogada(linha, coluna)) {
+                break; // jogada valida
+            } else {
+                printf("Jogada invalida. Tente novamente.\n");
+            }
+        }
+    }
 
+    if (victory()) {
+        mostrarT();
+        if (jogador1 == 'X') {
+            printf("Parabéns, %s! Você venceu!\n", ranking.j1);
+            ranking.vitoriaj1++;
+        } else {
+            printf("Parabéns, %s! Você venceu!\n", ranking.j2);
+            ranking.vitoriaj2++;
+        }
+        break;
+    }
 
-                if (victory()) {
-                     mostrarT();
-                if (jogador1 == 'X') {
-                        printf("congratulation, %s voce venceu!\n",  ranking.j1);
-                        ranking.vitoriaj1++;
-                }else {
-                        printf("congratulation, %s voce venceu!\n",  ranking.j2);
-                        ranking.vitoriaj2++;
-                }
-                        break;
-                }
-                    
-                    if (empate()) {
-                    mostrarT();
-                    printf("empate!\n");
-                    break;
-                    }
+    if (empate()) {
+        mostrarT();
+        printf("Empate!\n");
+        ranking.empates++;
+        break;
+    }
 
-                //alternar entre os jogadores X e O
-            alternar();
+    alternar();
             }
 //mostrando o ranking no terminal
         } else if (strcmp(escolha, "rank") == 0) {
